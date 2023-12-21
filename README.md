@@ -9,7 +9,7 @@ Ce projet propose un correcteur orthographique utilisant l'API GPT-3 de OpenAI. 
    - Obtenez une clé API en suivant les instructions fournies.
 
 2. **Remplacez la clé API dans le code**
-   - Ouvrez le fichier `README.md` et trouvez la section du code où la clé API est définie (`api_key = "ma clé"`).
+   - Ouvrez le fichier et trouvez la section du code où la clé API est définie (`api_key = "ma clé"`).
    - Remplacez `"ma clé"` par votre clé API.
 
 ## Utilisation
