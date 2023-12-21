@@ -24,12 +24,17 @@ Ce projet propose un correcteur orthographique utilisant l'API GPT-3 de OpenAI. 
 
 ## Installation des bibliothèques
 
-1. **Installer les dépendances Python**
-   - Exécutez `pip install pyperclip requests pynput openai`.
+1. **Installer Python**
+   - Si vous n'avez pas encore installé Python sur votre système, téléchargez et installez la dernière version depuis [le site officiel de Python](https://www.python.org/).
+   - Assurez-vous de cocher l'option "Ajouter Python à la variable d'environnement PATH" lors de l'installation.
 
-2. **Configuration de l'environnement OpenAI**
-   - Assurez-vous que vous avez un compte OpenAI et une clé API valide.
-   - Installez le module OpenAI via `pip install openai`.
+2. **Installer les dépendances Python**
+   - Ouvrez une fenêtre de terminal ou de commande.
+   - Exécutez la commande suivante pour installer les dépendances nécessaires :
+     ```
+     pip install pyperclip requests pynput openai
+     ```
+Avec ces étapes, vous devriez avoir Python installé, les dépendances requises installées, et votre environnement OpenAI configuré pour utiliser le script de correction orthographique.
 
 ## Remarques supplémentaires
 
