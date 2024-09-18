@@ -1,4 +1,4 @@
-# Projet de Correction Orthographique avec GPT-3.5
+# Projet de Correction Orthographique avec GPT
 
 Ce projet propose un correcteur orthographique utilisant l'API GPT-3 de OpenAI. Il permet de corriger le texte en cours en utilisant des raccourcis clavier et en exploitant la puissance de GPT-3. Voici comment utiliser ce code et personnaliser votre expérience.
 
