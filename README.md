@@ -1,59 +1,81 @@
-# Projet de Correction Orthographique, Traduction et Reformulation avec GPT
+# CedricGPT (Windows 11, from scratch)
 
-Ce projet propose un correcteur orthographique, un outil de traduction et de reformulation utilisant l'API GPT d'OpenAI. Il permet d'effectuer ces actions via des raccourcis clavier, en exploitant la puissance du modèle GPT-4 pour améliorer et manipuler du texte sélectionné.
+CedricGPT est un agent local minimaliste :
+1. vous sélectionnez un texte dans n'importe quelle application,
+2. vous appuyez sur un raccourci,
+3. le texte est corrigé / traduit / reformulé puis remplacé directement.
+
+Le projet est reparti de zéro, **sans compatibilité avec l'ancien code**.
+
+## Philosophie technique
+
+- **Simple à maintenir** : un runtime principal `cedricgpt.py`.
+- **Peu de dépendances** : `openai`, `keyboard`, `pyperclip`.
+- **Déploiement facile** : exécution Python ou binaire `.exe` avec PyInstaller.
+- **Intégration OS transparente** : hotkeys globaux + copier/coller simulé.
+
+## Architecture
+
+### 1) Hotkeys globales
+Le module `keyboard` écoute des raccourcis système Windows.
+
+### 2) Capture de la sélection
+Le script envoie `Ctrl+C`, attend un court délai, puis lit le presse-papiers.
+
+### 3) Appel OpenAI (Responses API)
+Le texte est envoyé à OpenAI via l'intégration moderne `client.responses.create(...)`.
+
+### 4) Remplacement dans l'app active
+Le résultat est copié dans le presse-papiers puis collé avec `Ctrl+V`.
+Le presse-papiers d'origine est ensuite restauré.
 
 ## Configuration
 
-1. **Obtenez une clé API OpenAI**
-   - Accédez à [OpenAI](https://beta.openai.com/signup/).
-   - Obtenez une clé API en suivant les instructions fournies.
+Variables d'environnement (voir `.env.example`) :
 
-2. **Remplacez la clé API dans le code**
-   - Ouvrez le fichier et trouvez la section du code où la clé API est définie (`api_key = ""`).
-   - Remplacez `""` par votre clé API.
+- `OPENAI_API_KEY` : clé API OpenAI
+- `CEDRICGPT_MODEL` : modèle (défaut: `gpt-5.2`)
+- `CEDRICGPT_HOTKEY_*` : raccourcis globaux
+- `CEDRICGPT_AUTO_PASTE` : `1` (colle auto) ou `0`
+- `CEDRICGPT_COPY_WAIT_SECONDS` : délai après `Ctrl+C`
 
-## Utilisation
+## Installation
 
-1. **Correction du texte**
-   - Appuyez sur `<Ctrl>+<Alt>+q` pour corriger le texte actuellement sélectionné.
-   - Le texte corrigé est copié dans le presse-papiers.
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+```
 
-2. **Traduction du texte**
-   - Appuyez sur `<Ctrl>+<Alt>+d` pour traduire le texte sélectionné du français vers l'anglais ou inversement.
-   - Le texte traduit est copié dans le presse-papiers.
+PowerShell (clé API) :
 
-3. **Reformulation du texte**
-   - Appuyez sur `<Ctrl>+<Alt>+a` pour reformuler le texte sélectionné.
-   - Le texte reformulé est copié dans le presse-papiers.
+```powershell
+setx OPENAI_API_KEY "sk-..."
+```
 
-4. **Terminer le programme**
-   - Appuyez sur `<Ctrl>+<Alt>+k` pour quitter le programme.
+## Lancer CedricGPT
 
-## Installation des bibliothèques
+```bash
+python cedricgpt.py
+```
 
-1. **Installer Python**
-   - Si vous n'avez pas encore installé Python sur votre système, téléchargez et installez la dernière version depuis [le site officiel de Python](https://www.python.org/).
-   - Assurez-vous de cocher l'option "Ajouter Python à la variable d'environnement PATH" lors de l'installation.
+Raccourcis par défaut :
+- `Ctrl+Alt+Q` : correction
+- `Ctrl+Alt+D` : traduction FR ↔ EN
+- `Ctrl+Alt+A` : reformulation
+- `Ctrl+Alt+K` : quitter
 
-2. **Installer les dépendances Python**
-   - Ouvrez une fenêtre de terminal ou de commande.
-   - Exécutez la commande suivante pour installer les dépendances nécessaires :
-     ```
-     pip install pyperclip requests pynput openai
-     ```
+## Générer un exécutable (.exe)
 
-## Remarques supplémentaires
+```bash
+pip install pyinstaller
+pyinstaller --onefile --name CedricGPT cedricgpt.py
+```
 
-- **Limite de tokens**
-  - La variable `max_tokens` dans les fonctions utilisant OpenAI peut être ajustée pour contrôler la longueur du texte envoyé à GPT-4.
+Binaire de sortie : `dist/CedricGPT.exe`
 
-- **Température du modèle**
-  - La variable `temperature` peut être ajustée pour contrôler la créativité de la réponse. Pour la correction orthographique, elle est réglée sur 0 pour obtenir des réponses plus strictes.
+## Notes pratiques
 
-- **Personnalisation des raccourcis clavier**
-  - Modifiez les raccourcis clavier dans la section `keyboard.GlobalHotKeys` du code pour correspondre à vos préférences.
-
-- **Sécurité**
-  - Assurez-vous de garder votre clé API confidentielle. Ne partagez pas votre clé API dans le code source public.
-
-N'hésitez pas à ajouter d'autres fonctionnalités ou personnaliser le code selon vos besoins spécifiques. Bonne utilisation de GPT pour vos corrections, traductions et reformulations ! 📝✨
+- Sur certains environnements Windows, les hooks clavier globaux peuvent nécessiter des droits élevés.
+- Certaines applications sécurisées peuvent bloquer la simulation `Ctrl+C` / `Ctrl+V`.
+- Si `gpt-5.2` n'est pas disponible sur votre compte, surchargez `CEDRICGPT_MODEL`.
